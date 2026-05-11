@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BowlsCoach AI — Coach Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1a6b3c;--gl:#2d9b5a;--gd:#0f3d22;--gp:#e8f5ee;--gold:#c9a84c;--glh:#f0d060;--cr:#f8faf8;--w:#fff;--gr:#7a8a7a;--dk:#1a2a1a;--bd:#d8e8d8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cr);color:var(--dk);padding-bottom:80px}
+header{background:linear-gradient(160deg,var(--gd),var(--g) 60%,var(--gl));padding:18px 20px 14px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;color:#fff}
+.logo span{color:var(--glh)}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.6);letter-spacing:3px;text-transform:uppercase;margin-top:3px}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--gd);display:flex;border-top:2px solid rgba(255,255,255,.1);z-index:100}
+.ni{flex:1;padding:10px 2px 8px;text-align:center;cursor:pointer;border-top:3px solid transparent}
+.ni.act{background:rgba(255,255,255,.08);border-top-color:var(--glh)}
+.ni-icon{font-size:18px;line-height:1}
+.ni-lbl{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:2px}
+.ni.act .ni-lbl{color:var(--glh)}
+.pg{display:none;padding:16px;max-width:580px;margin:0 auto}
+.card{background:var(--w);border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ct{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:var(--g);margin-bottom:14px}
+.ph{background:linear-gradient(135deg,var(--gd),var(--g));border-radius:16px;padding:18px 20px;margin-bottom:16px;color:#fff}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px}
+.pd{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;line-height:1.5}
+.stabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
+.stab{background:var(--w);border:2px solid var(--bd);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--gr)}
+.stab.act{border-color:var(--g);background:var(--gp);color:var(--gd)}
+.ss{display:none}
+.ib{background:#fff8e6;border:1px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:13px;color:#7a5010;line-height:1.6;margin-top:10px}
+.ib strong{color:#5a3a00;display:block;margin-bottom:3px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.btn{width:100%;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:14px;padding:17px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:16px;color:#fff;cursor:pointer;margin-top:6px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn2{width:100%;background:transparent;border:2px solid var(--g);border-radius:14px;padding:15px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;color:var(--g);cursor:pointer;margin-top:10px}
+.hero{background:linear-gradient(160deg,var(--gd),var(--g));border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.hero::before{content:'🔴🟡⚪';position:absolute;font-size:80px;opacity:.08;bottom:-10px;right:-10px}
+.htitle{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;line-height:1}
+.htitle span{color:var(--glh)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.fc{background:var(--w);border:2px solid var(--bd);border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer}
+.fi{font-size:30px;margin-bottom:8px}
+.fn{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--dk)}
+.fd{font-size:11px;color:var(--gr);margin-top:3px;line-height:1.4}
+.upa{border:2px dashed var(--gl);border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;background:var(--gp);margin-bottom:8px}
+.upi{font-size:36px;margin-bottom:8px}
+.upt{font-weight:700;font-size:15px;color:var(--gd);margin-bottom:4px}
+.ups{font-size:12px;color:var(--gr)}
+.vp{display:none;margin-top:10px;border-radius:10px;overflow:hidden;background:#000}
+.vp video{width:100%;max-height:180px;object-fit:contain}
+.il{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:8px;display:block}
+.ti{width:100%;background:var(--cr);border:2px solid var(--bd);border-radius:10px;padding:12px 16px;color:var(--dk);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;outline:none;margin-bottom:12px}
+.ti:focus{border-color:var(--g)}
+.ti::placeholder{color:#aaa;font-weight:400}
+textarea.ti{min-height:70px;resize:vertical;line-height:1.5}
+.load{display:none;text-align:center;padding:40px 20px}
+.spin{width:60px;height:60px;border-radius:50%;border:4px solid var(--bd);border-top-color:var(--g);animation:sp .9s linear infinite;margin:0 auto 16px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lt{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gd);margin-bottom:6px}
+.ls{font-size:13px;color:var(--gr)}
+.rh{background:linear-gradient(160deg,var(--gd),var(--g));border-radius:16px;padding:24px 20px;text-align:center;margin-bottom:16px;color:#fff}
+.rn{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px}
+.rb{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:3px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;color:var(--glh)}
+.fsec{background:var(--w);border-radius:14px;margin-bottom:10px;border:1px solid var(--bd);overflow:hidden}
+.fh{padding:14px 16px;display:flex;align-items:center;gap:10px}
+.fe{font-size:22px}
+.fname{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;flex:1;color:var(--dk)}
+.fr{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.rg{background:#e0f5e8;color:var(--g)}.ro{background:#fff5d6;color:#8a6010}.ri{background:#fde8e8;color:#b03030}
+.fb{padding:12px 16px 16px;border-top:1px solid var(--bd);font-size:14px;line-height:1.7;color:#444}
+.tb{background:var(--gp);border-left:3px solid var(--g);border-radius:0 8px 8px 0;padding:10px 12px;margin-top:10px;font-size:13px;color:var(--gd);line-height:1.5}
+.tb strong{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;color:var(--g)}
+.eb{display:none;background:#fde8e8;border:1px solid #f0b0b0;border-radius:12px;padding:14px 16px;color:#b03030;font-size:14px;margin-bottom:14px;line-height:1.5}
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.gb{background:var(--w);border:2px solid var(--bd);border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-weight:600;font-size:14px;color:var(--dk)}
+.gb.sel{border-color:var(--g);background:var(--gp)}
+.spt{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.spt th{background:var(--g);color:#fff;padding:8px 10px;text-align:left;font-weight:600;font-size:12px}
+.spt td{padding:8px 10px;border-bottom:1px solid var(--bd)}
+.spt tr:last-child td{border-bottom:none}
+.spt tr:nth-child(even) td{background:var(--cr)}
+.szr{display:none;background:var(--gp);border:2px solid var(--g);border-radius:12px;padding:16px;text-align:center;margin-top:12px}
+.szn{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--g);line-height:1}
+.sznote{font-size:12px;color:var(--gr);margin-top:8px;line-height:1.5}
+.bgg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.bbt{background:var(--w);border:2px solid var(--bd);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer}
+.bbt.sel{border-color:var(--gold);background:#fff8e6}
+.bbn{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:var(--dk);margin-bottom:3px}
+.bbo{font-size:11px;color:var(--gr)}
+.mdc{background:var(--w);border:2px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:10px}
+.mdt{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.mdn{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;flex:1}
+.mdb{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.mnar{background:#e8f0ff;color:#2255aa}.mmid{background:#e8f5ee;color:var(--g)}.mwid{background:#fff0e0;color:#cc6600}
+.bbar{height:8px;background:var(--bd);border-radius:4px;margin:8px 0;overflow:hidden}
+.bfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--g),var(--gold))}
+.mdd{font-size:13px;color:var(--gr);line-height:1.5}
+.tgs{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.tg{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:var(--gp);color:var(--gd)}
+.rpp{display:none;background:linear-gradient(135deg,var(--gd),var(--g));border-radius:16px;padding:22px;color:#fff;margin-bottom:14px}
+.rpp.show{display:block}
+.rpt{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:var(--glh);margin-bottom:8px}
+.rpb{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px}
+.rpa{font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2)}
+select{width:100%;background:var(--cr);border:2px solid var(--bd);border-radius:10px;padding:12px 16px;color:var(--dk);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;outline:none;appearance:none;cursor:pointer;margin-bottom:14px}
+select:focus{border-color:var(--g)}
+.mtr{height:28px;border-radius:14px;background:linear-gradient(90deg,#1565c0 0%,#1976d2 20%,#2e7d32 40%,#66bb6a 60%,#e65100 75%,#b71c1c 100%);margin-bottom:6px}
+.mlb{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--gr);margin-bottom:16px}
+.sir{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.siw{flex:1}
+.sil{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px;display:block}
+input[type=range]{width:100%;accent-color:var(--g);cursor:pointer}
+.sds{text-align:center;min-width:70px}
+.sdn{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;color:var(--g)}
+.sdu{font-size:11px;color:var(--gr);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.scr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.sc{border-radius:12px;padding:14px;color:#fff}
+.sc.slow{background:#1565c0}.sc.med{background:#2e7d32}.sc.fast{background:#e65100}.sc.vfast{background:#b71c1c}
+.scs{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1}
+.scl{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:4px 0;opacity:.9}
+.scw{font-size:11px;opacity:.8;line-height:1.4}
+.fcc{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--bd);align-items:flex-start}
+.fcc:last-child{border-bottom:none}
+.fci{font-size:28px;flex-shrink:0}
+.fct{font-weight:700;font-size:14px;color:var(--dk);margin-bottom:4px}
+.fcd{font-size:13px;color:var(--gr);line-height:1.6}
+.fca{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:6px}
+.fcas{background:#e3f2fd;color:#1565c0}.fcaf{background:#fff3e0;color:#e65100}.fcab{background:var(--gp);color:var(--g)}
+.adh{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;margin-bottom:10px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px}
+.adhs{background:#1565c0}.adhf{background:#e65100}.adhi{background:var(--gd)}
+.adt{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6;display:flex;gap:10px}
+.adti{font-size:18px;flex-shrink:0}
+.adtt strong{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:3px}
+.drc{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.drt{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.drs{background:var(--gp);border-radius:10px;padding:14px;margin-bottom:10px}
+.drst{font-weight:700;font-size:13px;color:var(--gd);margin-bottom:6px}
+.drsd{font-size:13px;color:var(--dk);line-height:1.6}
+.drf{background:#fff8e6;border-radius:10px;padding:14px}
+.drft{font-weight:700;font-size:13px;color:#7a5010;margin-bottom:6px}
+.drfd{font-size:13px;color:#5a3a00;line-height:1.6}
+.shc{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.sht{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.shg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.shw{background:var(--gp);border-radius:8px;padding:10px;font-size:12px;color:var(--gd)}
+.shtt{background:#fff8e6;border-radius:8px;padding:10px;font-size:12px;color:#7a5010}
+.psc{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.pst{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.psr{background:var(--gp);border-radius:10px;padding:14px;margin-bottom:10px}
+.psrt{font-weight:700;font-size:13px;color:var(--gd);margin-bottom:4px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Bowls<span>Coach</span> AI</div>
+  <div class="logo-sub">⭐ Coach Edition v1.0</div>
+</header>
+
+<!-- HOME -->
+<div class="pg" id="pg-home">
+  <div class="hero">
+    <div class="htitle">Bowls<span>Coach</span> AI</div>
+    <div style="display:inline-block;background:var(--gold);color:var(--dk);font-size:11px;font-weight:700;letter-spacing:2px;padding:3px 14px;border-radius:20px;margin-top:8px">⭐ COACH EDITION</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:10px;line-height:1.5">Professional coaching tools for qualified coaches, club coaches and county level players.</div>
+  </div>
+  <div class="fg">
+    <div class="fc" onclick="go('analysis')"><div class="fi">🎥</div><div class="fn">Delivery Analysis</div><div class="fd">Dual angle AI coaching report</div></div>
+    <div class="fc" onclick="go('bowls')"><div class="fi">🔴</div><div class="fn">Bowl Selector</div><div class="fd">Models, trajectory and sizing</div></div>
+    <div class="fc" onclick="go('speed')"><div class="fi">🌿</div><div class="fn">Green Speed</div><div class="fd">Measure and adapt to any surface</div></div>
+    <div class="fc" onclick="go('drills')"><div class="fi">📚</div><div class="fn">Drills Library</div><div class="fd">World Bowls coaching drills</div></div>
+    <div class="fc" onclick="go('tactics')"><div class="fi">🎯</div><div class="fn">Shot Tactics</div><div class="fd">Shot types, head reading and strategy</div></div>
+    <div class="fc" style="opacity:.4;cursor:default"><div class="fi">📈</div><div class="fn">Player Progress</div><div class="fd">Coming soon</div></div>
+  </div>
+</div>
+
+<!-- ANALYSIS -->
+<div class="pg" id="pg-analysis">
+  <div class="ph"><div class="pt">🎥 Delivery Analysis</div><div class="pd">Upload side-on and front-on videos for a complete dual-angle coaching report</div></div>
+  <div id="aForm">
+    <div class="eb" id="aErr"></div>
+    <div class="card">
+      <div class="ct">👤 Player Details</div>
+      <label class="il">Player Name</label>
+      <input type="text" class="ti" id="aName" placeholder="e.g. John Smith">
+      <label class="il">Coach Notes (optional)</label>
+      <textarea class="ti" id="aNotes" placeholder="e.g. Tends to drop shoulder, struggling with line on fast greens..."></textarea>
+    </div>
+    <div class="card">
+      <div class="ct">↔️ Side-On Video</div>
+      <div style="background:rgba(45,155,90,.1);border:1px solid rgba(45,155,90,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:rgba(26,42,26,.7);margin-bottom:12px;line-height:1.5"><strong style="color:var(--gl)">Tip:</strong> Stand 3-4m to the side. Keep full body in frame. Required.</div>
+      <div class="upa" onclick="document.getElementById('fSide').click()">
+        <div class="upi">🔴🟡⚪</div>
+        <div class="upt" id="utSide">Tap to select side-on video</div>
+        <div class="ups" id="usSide">MP4, MOV or any format</div>
+      </div>
+      <input type="file" id="fSide" accept="video/*" style="display:none" onchange="handleVid(event,'side')">
+      <div class="vp" id="vpSide"><video id="vSide" controls playsinline></video></div>
+    </div>
+    <div class="card">
+      <div class="ct">⬆️ Front-On Video <span style="font-size:12px;font-weight:400;color:var(--gr)">(Recommended)</span></div>
+      <div style="background:rgba(45,155,90,.1);border:1px solid rgba(45,155,90,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:rgba(26,42,26,.7);margin-bottom:12px;line-height:1.5"><strong style="color:var(--gl)">Tip:</strong> 5-6m directly in front, in line with the jack. Stay clear of the bowl!</div>
+      <div class="upa" onclick="document.getElementById('fFront').click()">
+        <div class="upi">🔴🟡⚪</div>
+        <div class="upt" id="utFront">Tap to select front-on video</div>
+        <div class="ups" id="usFront">Adds line and shoulder analysis</div>
+      </div>
+      <input type="file" id="fFront" accept="video/*" style="display:none" onchange="handleVid(event,'front')">
+      <div class="vp" id="vpFront"><video id="vFront" controls playsinline></video></div>
+    </div>
+    <button class="btn" id="aBtn" onclick="runAnalysis()" disabled>🔴🟡⚪ Analyse Delivery</button>
+  </div>
+  <div class="load" id="aLoad"><div class="spin"></div><div class="lt">Analysing Delivery</div><div class="ls">Reading technique across both angles...</div></div>
+  <div id="aResults"></div>
+</div>
+
+<!-- BOWLS -->
+<div class="pg" id="pg-bowls">
+  <div class="ph"><div class="pt">🔴 Bowl Selector</div><div class="pd">Hand sizing, full model guide with trajectory diagrams and recommendations</div></div>
+  <div class="stabs">
+    <div class="stab act" id="bt-sizing" onclick="bTab('sizing')">✋ Sizing</div>
+    <div class="stab" id="bt-models" onclick="bTab('models')">🔴 Models</div>
+    <div class="stab" id="bt-rec" onclick="bTab('rec')">⭐ Recommend</div>
+  </div>
+  <div class="ss" id="bs-sizing" style="display:block">
+    <div class="card">
+      <div class="ct">✋ Bowl Size Guide</div>
+      <div class="ib" style="margin-bottom:10px"><strong>Finger and Thumb Method</strong>Hold a bowl and wrap fingers and thumb around it. Fingertips should just meet underneath. Overlap = go bigger. Cannot reach = go smaller.</div>
+      <div class="ib"><strong>Span Test</strong>Measure thumb tip to little finger tip in cm. Use the chart below as your starting point.</div>
+    </div>
+    <div class="card">
+      <div class="ct">📐 Span Chart</div>
+      <div class="gg"><div class="gb sel" id="gMen" onclick="bGender('men')">👨 Men</div><div class="gb" id="gLad" onclick="bGender('ladies')">👩 Ladies</div></div>
+      <table class="spt"><thead><tr><th>Span</th><th>Size</th><th>Notes</th></tr></thead><tbody id="spanBody"></tbody></table>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Quick Calculator</div>
+      <label class="il">Hand span</label>
+      <select id="spanSel" onchange="calcSize()">
+        <option value="">Select span...</option>
+        <option value="16">Under 17cm</option><option value="17">17-18cm</option>
+        <option value="18">18-19cm</option><option value="19">19-20cm</option>
+        <option value="20">20-21cm</option><option value="21">21-22cm</option>
+        <option value="22">22-23cm</option><option value="23">Over 23cm</option>
+      </select>
+      <div class="szr" id="sizeRes"><div class="szn" id="sizeNum">2</div><div style="font-size:13px;color:var(--gd);font-weight:600;margin-top:4px">Suggested Bowl Size</div><div class="sznote" id="sizeNote"></div></div>
+    </div>
+  </div>
+  <div class="ss" id="bs-models">
+    <div class="card">
+      <div class="ct">🔴 Select Brand</div>
+      <div class="bgg">
+        <div class="bbt" id="bbDrakes" onclick="setBrand('drakes')"><div class="bbn">Drakes Pride</div><div class="bbo">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Liverpool</div></div>
+        <div class="bbt" id="bbTaylor" onclick="setBrand('taylor')"><div class="bbn">Taylor</div><div class="bbo">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Glasgow</div></div>
+        <div class="bbt" id="bbHenselite" onclick="setBrand('henselite')"><div class="bbn">Henselite</div><div class="bbo">🇦🇺 Melbourne</div></div>
+        <div class="bbt" id="bbAero" onclick="setBrand('aero')"><div class="bbn">Aero</div><div class="bbo">🇦🇺 Australia</div></div>
+      </div>
+    </div>
+    <div id="modelsPanel"></div>
+  </div>
+  <div class="ss" id="bs-rec">
+    <div class="card">
+      <div class="ct">🌿 Playing Conditions</div>
+      <label class="il">Surface</label>
+      <select id="rGreen" onchange="doRec()">
+        <option value="">Select surface...</option>
+        <option value="indoor">Indoor Carpet</option>
+        <option value="fast">Outdoor Fast (14-17s)</option>
+        <option value="medium">Outdoor Medium (12-14s)</option>
+        <option value="slow">Outdoor Slow (9-12s)</option>
+      </select>
+      <label class="il">Position</label>
+      <select id="rPos" onchange="doRec()">
+        <option value="">Select position...</option>
+        <option value="lead">Lead</option><option value="second">Second</option>
+        <option value="third">Third</option><option value="skip">Skip</option>
+      </select>
+      <label class="il">Brand Preference</label>
+      <select id="rBrand" onchange="doRec()">
+        <option value="">Any brand</option>
+        <option value="drakes">Drakes Pride</option><option value="taylor">Taylor</option>
+        <option value="henselite">Henselite</option><option value="aero">Aero</option>
+      </select>
+    </div>
+    <div class="rpp" id="recPanel"><div class="rpt">⭐ Recommendation</div><div class="rpb" id="recBowl"></div><div class="rpa" id="recAdv"></div></div>
+  </div>
+</div>
+
+<!-- GREEN SPEED -->
+<div class="pg" id="pg-speed">
+  <div class="ph"><div class="pt">🌿 Green Speed</div><div class="pd">Measure, understand and coach adaptation to any green</div></div>
+  <div class="stabs">
+    <div class="stab act" id="gt-checker" onclick="gTab('checker')">⏱️ Checker</div>
+    <div class="stab" id="gt-scale" onclick="gTab('scale')">📊 Scale</div>
+    <div class="stab" id="gt-adapt" onclick="gTab('adapt')">🎯 Adapt</div>
+  </div>
+  <div class="ss" id="gs-checker" style="display:block">
+    <div class="card">
+      <div class="ct">⏱️ Speed Checker</div>
+      <p style="font-size:13px;color:var(--gr);margin-bottom:14px">Drag to your green timing in seconds</p>
+      <div class="mtr"></div>
+      <div class="mlb"><span>9s Slow</span><span>12s</span><span>14s</span><span>17s</span><span>20s Fast</span></div>
+      <div class="sir">
+        <div class="siw"><label class="sil">Green speed</label><input type="range" id="gSlider" min="9" max="20" value="12" step="0.5" oninput="updateSpeed()"></div>
+        <div class="sds"><div class="sdn" id="sNum">12</div><div class="sdu">secs</div></div>
+      </div>
+      <div id="sResult"></div>
+    </div>
+    <div class="card">
+      <div class="ct">📏 How to Measure</div>
+      <div class="fcc"><div class="fci">🎳</div><div><div class="fct">Standard Method</div><div class="fcd">Deliver a bowl with normal draw weight. Time from release until it stops. Average 3 readings. That is your green speed in seconds.</div></div></div>
+      <div class="ib" style="margin-top:8px"><strong>Coaching Tip</strong>Green speed changes during the day. Measure before sessions and note conditions to build a picture over the season.</div>
+    </div>
+  </div>
+  <div class="ss" id="gs-scale">
+    <div class="card">
+      <div class="ct">📊 Speed Scale</div>
+      <p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:14px">Higher seconds = faster green. The bowl rolls further for the same delivery effort.</p>
+      <div class="scr"><div class="sc slow"><div class="scs">9-12s</div><div class="scl">Slow</div><div class="scw">🇬🇧 UK early season, wet</div></div><div class="sc med"><div class="scs">12-14s</div><div class="scl">Medium</div><div class="scw">🇬🇧 UK summer conditions</div></div></div>
+      <div class="scr"><div class="sc fast"><div class="scs">14-17s</div><div class="scl">Fast</div><div class="scw">🏠 Indoor, 🇦🇺 Australia</div></div><div class="sc vfast"><div class="scs">17-20s</div><div class="scl">Very Fast</div><div class="scw">🇦🇺 Premium greens</div></div></div>
+    </div>
+    <div class="card">
+      <div class="ct">🌿 Factors Affecting Speed</div>
+      <div class="fcc"><div class="fci">✂️</div><div><div class="fct">Grass Length</div><div class="fcd">The biggest factor. 1mm difference can change speed by several seconds.</div><span class="fca fcaf">Shorter = Faster</span></div></div>
+      <div class="fcc"><div class="fci">💧</div><div><div class="fct">Moisture</div><div class="fcd">Wet greens are significantly slower. Greens speed up as they dry during the day.</div><span class="fca fcas">Wet = Slower</span></div></div>
+      <div class="fcc"><div class="fci">☀️</div><div><div class="fct">Temperature</div><div class="fcd">Hot dry conditions firm the surface. Why Australian greens are naturally faster.</div><span class="fca fcaf">Hot and Dry = Faster</span></div></div>
+      <div class="fcc"><div class="fci">🔄</div><div><div class="fct">Rolling</div><div class="fcd">Regular rolling compacts the surface and increases speed.</div><span class="fca fcaf">Regular Rolling = Faster</span></div></div>
+    </div>
+  </div>
+  <div class="ss" id="gs-adapt">
+    <div class="card"><div class="ct">🎯 The Key Principle</div><p style="font-size:14px;line-height:1.8"><strong>Faster green</strong> = less weight + wider line<br><strong>Slower green</strong> = more weight + narrower line<br><br>Bias effect increases significantly on faster greens.</p></div>
+    <div style="margin-bottom:16px"><div class="adh adhs">🐢 Slow Green (9-12 seconds)</div><div class="adt"><div class="adti">💪</div><div class="adtt"><strong>More Weight</strong>Fuller arm swing and positive step-through.</div></div><div class="adt"><div class="adti">➡️</div><div class="adtt"><strong>Narrow the Line</strong>Less bias effect. Most players do not narrow enough.</div></div><div class="adt"><div class="adti">🎳</div><div class="adtt"><strong>Bowl Choice</strong>Wider bias — XP, Legacy SL, Tiger EVO, Sonic.</div></div></div>
+    <div style="margin-bottom:16px"><div class="adh adhf">⚡ Fast Green (14-17 seconds)</div><div class="adt"><div class="adti">🪶</div><div class="adtt"><strong>Less Weight</strong>Shorten backswing. Small errors are amplified.</div></div><div class="adt"><div class="adti">↗️</div><div class="adtt"><strong>Wider Line</strong>Bias increases dramatically. Most players do not go wide enough.</div></div><div class="adt"><div class="adti">🎳</div><div class="adtt"><strong>Bowl Choice</strong>Narrower bias — d-tec, Vector VS, Tiger TX, Quantum.</div></div></div>
+    <div style="margin-bottom:16px"><div class="adh adhi">🏠 Indoor vs Outdoor</div><div class="adt"><div class="adti">📉</div><div class="adtt"><strong>Going Outdoor After Indoor</strong>Significant slow-down. Be patient and let the green show what it needs.</div></div><div class="adt"><div class="adti">📈</div><div class="adtt"><strong>Going Indoor After Outdoor</strong>Lightning fast. Widen line dramatically and soften delivery. Allow 4-6 ends to calibrate.</div></div></div>
+  </div>
+</div>
+
+<!-- DRILLS -->
+<div class="pg" id="pg-drills">
+  <div class="ph"><div class="pt">📚 Drills Library</div><div class="pd">World Bowls endorsed coaching drills — beginner to advanced</div></div>
+  <div class="stabs">
+    <div class="stab act" id="dt-basic" onclick="dTab('basic')">🌱 Basic</div>
+    <div class="stab" id="dt-prog" onclick="dTab('prog')">📈 Progressive</div>
+    <div class="stab" id="dt-games" onclick="dTab('games')">🎮 Games</div>
+    <div class="stab" id="dt-circuit" onclick="dTab('circuit')">⚡ Circuit</div>
+  </div>
+  <div class="ss" id="ds-basic" style="display:block">
+    <div class="ib" style="margin-bottom:14px"><strong>How to Use</strong>Run these in coaching sessions. Vary mat position — short, medium and long. Record results for tracking progress.</div>
+    <div class="drc"><div class="drt">🎯 Skill 1 — Jack Delivery and First Bowl Effect</div><div class="drs"><div class="drst">Setup</div><div class="drsd">Player delivers jack to target mark then delivers bowl to finish as close as possible to the jack.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Assess pre-shot routine, mat approach, delivery action and follow through. Check first bowl effectiveness.</div></div></div>
+    <div class="drc"><div class="drt">🎯 Skill 2 — Shot Recovery</div><div class="drs"><div class="drst">Setup</div><div class="drsd">Place an opposition bowl close to the jack. Player must draw to beat it — finish closer to the jack.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Does the player assess the head before delivering? Correct hand? Is weight control sufficient to just beat the shot?</div></div></div>
+    <div class="drc"><div class="drt">🎯 Skill 3 — Draw Off Line</div><div class="drs"><div class="drst">Setup</div><div class="drsd">Place jack close to rink boundary at 25m. Player draws two bowls forehand and two backhand to the jack.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Can the player adjust their line for an off-centre jack? This drill exposes hand weakness quickly.</div></div></div>
+    <div class="drc"><div class="drt">🎯 Skill 4 — Grouping No Jack</div><div class="drs"><div class="drst">Setup</div><div class="drsd">No jack. Player bowls first bowl as the target. Next three bowls delivered to group as close as possible.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Removes mental pressure of a jack. Reveals line and length consistency issues clearly.</div></div></div>
+    <div class="drc"><div class="drt">🎯 Skill 5 — Draw to the Ditch</div><div class="drs"><div class="drst">Setup</div><div class="drsd">Place jack on 2m mark. All four bowls must finish between the jack and the ditch.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Excellent weight control drill. Brilliant for skips who need consistent back bowl placement.</div></div></div>
+    <div class="drc"><div class="drt">🎳 Warm Up — Delivery Line</div><div class="drs"><div class="drst">Setup</div><div class="drsd">Place two discs along the delivery line. Player bowls over or between the discs. Outcome is NOT the priority.</div></div><div class="drf"><div class="drft">💡 Coach Focus</div><div class="drfd">Assess pre-shot routine and delivery action. One of the few drills where the result does not matter.</div></div></div>
+  </div>
+  <div class="ss" id="ds-prog">
+    <div class="drc"><div class="drt">📈 Progressive Drawing Drill</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">3 players per rink, 2 bowls each. Closest bowl moves up one rink. Furthest moves down. Run for 15 ends.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">Identifies consistently accurate players. Exposes hand weaknesses and creates healthy competitive pressure.</div></div></div>
+    <div class="drc"><div class="drt">📈 40 Bowl Skills Assessment</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">10 ends, 4 bowls per end. Score each bowl: E=Effective S=Short L=Long W=Wide N=Narrow.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">Comprehensive snapshot of a player all-round game. Run at regular intervals to track improvement.</div></div></div>
+    <div class="drc"><div class="drt">📈 Short Bowl Penalty Game</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Normal game. Any bowl finishing more than 30cm short of the jack is removed immediately.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">Quickly eliminates the habit of consistently bowling short. Players rapidly improve length when there are consequences.</div></div></div>
+    <div class="drc"><div class="drt">📈 Line and Speed Adjustment</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Player draws to target X. Coach repositions the target. Player must adjust with their next bowl.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">Tests the most critical in-game skill — the ability to adjust after seeing where your bowl finishes.</div></div></div>
+  </div>
+  <div class="ss" id="ds-games">
+    <div class="drc"><div class="drt">🎮 Rotating Positions</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Fours game. After 4 ends all players rotate position. Then 3 bowls, then 2, then 1.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">Builds empathy across positions and understanding of what each role needs.</div></div></div>
+    <div class="drc"><div class="drt">🎮 Phantom Bowler</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Coach places opposition bowls on the head to create specific tactical situations. Team plays normally.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">The most powerful tactical coaching tool available. Ask questions to develop player thinking.</div></div></div>
+    <div class="drc"><div class="drt">🎮 Super Challenge</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Two teams. Each player plays ONE bowl over TWO ends. Closest counting bowls win the set.</p><div class="drf"><div class="drft">💡 Coach Value</div><div class="drfd">High pressure single bowl situations. Excellent for developing composure under competitive pressure.</div></div></div>
+  </div>
+  <div class="ss" id="ds-circuit">
+    <div class="card"><div class="ct">⚡ 8-Station Circuit</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">World Bowls endorsed. Players keep individual scores and move between stations. 8 rinks required.</p></div>
+    <div class="drc"><div class="drt">Station 1 — Jack Delivery Accuracy</div><div class="drsd" style="font-size:13px;line-height:1.6">8 jacks. Deliver 2 to each of 4 markers at different lengths. Score jacks landing within the target zone.</div></div>
+    <div class="drc"><div class="drt">Station 2 — Ditch Control</div><div class="drsd" style="font-size:13px;line-height:1.6">Score only jacks finishing between the ditch and the 2m mark.</div></div>
+    <div class="drc"><div class="drt">Station 3 — Line Taking</div><div class="drsd" style="font-size:13px;line-height:1.6">Bowl between markers. Gradually narrow until bowling only over a discus.</div></div>
+    <div class="drc"><div class="drt">Station 4 — Weight and Centre Return</div><div class="drsd" style="font-size:13px;line-height:1.6">2m mat, forehand and backhand. Score bowls returning to within 30cm either side of centre.</div></div>
+    <div class="drc"><div class="drt">Station 5 — 2m Zone Play</div><div class="drsd" style="font-size:13px;line-height:1.6">Cones 1m either side of jack. All bowls must finish between cone and jack.</div></div>
+    <div class="drc"><div class="drt">Station 6 — Playing Around a Bowl</div><div class="drsd" style="font-size:13px;line-height:1.6">Draw around a wing bowl to jack. Draw between jack and bowl 2m behind. Repeat
