@@ -1,0 +1,709 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BowlsCoach AI — Coach Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1a6b3c;--gl:#2d9b5a;--gd:#0f3d22;--gp:#e8f5ee;--gold:#c9a84c;--glh:#f0d060;--cr:#f8faf8;--w:#fff;--gr:#7a8a7a;--dk:#1a2a1a;--bd:#d8e8d8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cr);color:var(--dk);padding-bottom:80px}
+header{background:linear-gradient(160deg,var(--gd),var(--g) 60%,var(--gl));padding:18px 20px 14px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;color:#fff}
+.logo span{color:var(--glh)}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.6);letter-spacing:3px;text-transform:uppercase;margin-top:3px}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--gd);display:flex;border-top:2px solid rgba(255,255,255,.1);z-index:100}
+.ni{flex:1;padding:10px 2px 8px;text-align:center;cursor:pointer;border-top:3px solid transparent}
+.ni.act{background:rgba(255,255,255,.08);border-top-color:var(--glh)}
+.ni-icon{font-size:18px;line-height:1}
+.ni-lbl{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:2px}
+.ni.act .ni-lbl{color:var(--glh)}
+.pg{display:none;padding:16px;max-width:580px;margin:0 auto}
+.card{background:var(--w);border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ct{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:var(--g);margin-bottom:14px}
+.ph{background:linear-gradient(135deg,var(--gd),var(--g));border-radius:16px;padding:18px 20px;margin-bottom:16px;color:#fff}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px}
+.pd{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;line-height:1.5}
+.stabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
+.stab{background:var(--w);border:2px solid var(--bd);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--gr)}
+.stab.act{border-color:var(--g);background:var(--gp);color:var(--gd)}
+.ss{display:none}
+.ib{background:#fff8e6;border:1px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:13px;color:#7a5010;line-height:1.6;margin-top:10px}
+.ib strong{color:#5a3a00;display:block;margin-bottom:3px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.btn{width:100%;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:14px;padding:17px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:16px;color:#fff;cursor:pointer;margin-top:6px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn2{width:100%;background:transparent;border:2px solid var(--g);border-radius:14px;padding:15px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;color:var(--g);cursor:pointer;margin-top:10px}
+.hero{background:linear-gradient(160deg,var(--gd),var(--g));border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.hero::before{content:'🔴🟡⚪';position:absolute;font-size:80px;opacity:.08;bottom:-10px;right:-10px}
+.htitle{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;line-height:1}
+.htitle span{color:var(--glh)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.fc{background:var(--w);border:2px solid var(--bd);border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer}
+.fi{font-size:30px;margin-bottom:8px}
+.fn{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--dk)}
+.fd{font-size:11px;color:var(--gr);margin-top:3px;line-height:1.4}
+.upa{border:2px dashed var(--gl);border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;background:var(--gp);margin-bottom:8px}
+.upi{font-size:36px;margin-bottom:8px}
+.upt{font-weight:700;font-size:15px;color:var(--gd);margin-bottom:4px}
+.ups{font-size:12px;color:var(--gr)}
+.vp{display:none;margin-top:10px;border-radius:10px;overflow:hidden;background:#000}
+.vp video{width:100%;max-height:180px;object-fit:contain}
+.il{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:8px;display:block}
+.ti{width:100%;background:var(--cr);border:2px solid var(--bd);border-radius:10px;padding:12px 16px;color:var(--dk);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;outline:none;margin-bottom:12px}
+.ti:focus{border-color:var(--g)}
+.ti::placeholder{color:#aaa;font-weight:400}
+textarea.ti{min-height:70px;resize:vertical;line-height:1.5}
+.load{display:none;text-align:center;padding:40px 20px}
+.spin{width:60px;height:60px;border-radius:50%;border:4px solid var(--bd);border-top-color:var(--g);animation:sp .9s linear infinite;margin:0 auto 16px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lt{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gd);margin-bottom:6px}
+.ls{font-size:13px;color:var(--gr)}
+.rh{background:linear-gradient(160deg,var(--gd),var(--g));border-radius:16px;padding:24px 20px;text-align:center;margin-bottom:16px;color:#fff}
+.rn{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px}
+.rb{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:3px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;color:var(--glh)}
+.fs{background:var(--w);border-radius:14px;margin-bottom:10px;border:1px solid var(--bd);overflow:hidden}
+.fh{padding:14px 16px;display:flex;align-items:center;gap:10px}
+.fe{font-size:22px}
+.fname{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;flex:1;color:var(--dk)}
+.fr{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.rg{background:#e0f5e8;color:var(--g)}.ro{background:#fff5d6;color:#8a6010}.ri{background:#fde8e8;color:#b03030}
+.fb{padding:12px 16px 16px;border-top:1px solid var(--bd);font-size:14px;line-height:1.7;color:#444}
+.tb{background:var(--gp);border-left:3px solid var(--g);border-radius:0 8px 8px 0;padding:10px 12px;margin-top:10px;font-size:13px;color:var(--gd);line-height:1.5}
+.tb strong{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;color:var(--g)}
+.eb{display:none;background:#fde8e8;border:1px solid #f0b0b0;border-radius:12px;padding:14px 16px;color:#b03030;font-size:14px;margin-bottom:14px;line-height:1.5}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.gb{background:var(--w);border:2px solid var(--bd);border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-weight:600;font-size:14px;color:var(--dk)}
+.gb.sel{border-color:var(--g);background:var(--gp)}
+.spt{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.spt th{background:var(--g);color:#fff;padding:8px 10px;text-align:left;font-weight:600;font-size:12px}
+.spt td{padding:8px 10px;border-bottom:1px solid var(--bd)}
+.spt tr:last-child td{border-bottom:none}
+.spt tr:nth-child(even) td{background:var(--cr)}
+.szr{display:none;background:var(--gp);border:2px solid var(--g);border-radius:12px;padding:16px;text-align:center;margin-top:12px}
+.szn{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--g);line-height:1}
+.sznote{font-size:12px;color:var(--gr);margin-top:8px;line-height:1.5}
+.bg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.bb{background:var(--w);border:2px solid var(--bd);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer}
+.bb.sel{border-color:var(--gold);background:#fff8e6}
+.bn{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:var(--dk);margin-bottom:3px}
+.bo{font-size:11px;color:var(--gr)}
+.mc{background:var(--w);border:2px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:10px}
+.mmt{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.mmn{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;flex:1}
+.mbg{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.mnar{background:#e8f0ff;color:#2255aa}.mmid{background:#e8f5ee;color:var(--g)}.mwid{background:#fff0e0;color:#cc6600}
+.bbar{height:8px;background:var(--bd);border-radius:4px;margin:8px 0;overflow:hidden}
+.bfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--g),var(--gold))}
+.mmd{font-size:13px;color:var(--gr);line-height:1.5}
+.mtags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.mtag{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:var(--gp);color:var(--gd)}
+.rcp{display:none;background:linear-gradient(135deg,var(--gd),var(--g));border-radius:16px;padding:22px;color:#fff;margin-bottom:14px}
+.rcp.show{display:block}
+.rct{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:var(--glh);margin-bottom:8px}
+.rcb{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px}
+.rca{font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2)}
+select{width:100%;background:var(--cr);border:2px solid var(--bd);border-radius:10px;padding:12px 16px;color:var(--dk);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;outline:none;appearance:none;cursor:pointer;margin-bottom:14px}
+select:focus{border-color:var(--g)}
+.mtrack{height:28px;border-radius:14px;background:linear-gradient(90deg,#1565c0 0%,#1976d2 20%,#2e7d32 40%,#66bb6a 60%,#e65100 75%,#b71c1c 100%);margin-bottom:6px}
+.mlbls{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--gr);margin-bottom:16px}
+.srow{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.swrp{flex:1}
+.slbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:6px;display:block}
+input[type=range]{width:100%;accent-color:var(--g);cursor:pointer}
+.sdsp{text-align:center;min-width:70px}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;color:var(--g)}
+.sunit{font-size:11px;color:var(--gr);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.scgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.scard{border-radius:12px;padding:14px;color:#fff}
+.scard.slow{background:#1565c0}.scard.med{background:#2e7d32}.scard.fast{background:#e65100}.scard.vfast{background:#b71c1c}
+.scnum{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1}
+.sclbl{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:4px 0;opacity:.9}
+.scwhr{font-size:11px;opacity:.8;line-height:1.4}
+.fcard{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--bd);align-items:flex-start}
+.fcard:last-child{border-bottom:none}
+.fcico{font-size:28px;flex-shrink:0}
+.fctit{font-weight:700;font-size:14px;color:var(--dk);margin-bottom:4px}
+.fcdsc{font-size:13px;color:var(--gr);line-height:1.6}
+.fcimp{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:6px}
+.imp-s{background:#e3f2fd;color:#1565c0}.imp-f{background:#fff3e0;color:#e65100}.imp-b{background:var(--gp);color:var(--g)}
+.adhd{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;margin-bottom:10px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px}
+.adhd.slow{background:#1565c0}.adhd.fast{background:#e65100}.adhd.ind{background:var(--gd)}
+.atip{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6;display:flex;gap:10px}
+.atic{font-size:18px;flex-shrink:0}
+.atxt strong{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:3px}
+.dcard{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.dtit{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.dset{background:var(--gp);border-radius:10px;padding:14px;margin-bottom:10px}
+.dstt{font-weight:700;font-size:13px;color:var(--gd);margin-bottom:6px}
+.dstd{font-size:13px;color:var(--dk);line-height:1.6}
+.dfoc{background:#fff8e6;border-radius:10px;padding:14px}
+.dfot{font-weight:700;font-size:13px;color:#7a5010;margin-bottom:6px}
+.dfod{font-size:13px;color:#5a3a00;line-height:1.6}
+.sshot{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.sstit{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.ssgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sswhn{background:var(--gp);border-radius:8px;padding:10px;font-size:12px;color:var(--gd)}
+.sstip{background:#fff8e6;border-radius:8px;padding:10px;font-size:12px;color:#7a5010}
+.pcard{background:var(--w);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--bd)}
+.ptit{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gd);margin-bottom:10px}
+.prole{background:var(--gp);border-radius:10px;padding:14px;margin-bottom:10px}
+.prt{font-weight:700;font-size:13px;color:var(--gd);margin-bottom:4px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Bowls<span>Coach</span> AI</div>
+  <div class="logo-sub">⭐ Coach Edition v1.1.1</div>
+</header><div class="pg" id="pg-home">
+  <div class="hero">
+    <div class="htitle">Bowls<span>Coach</span> AI</div>
+    <div style="display:inline-block;background:var(--gold);color:var(--dk);font-size:11px;font-weight:700;letter-spacing:2px;padding:3px 14px;border-radius:20px;margin-top:8px">⭐ COACH EDITION</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:10px;line-height:1.5">Professional coaching tools for qualified coaches, club coaches and county level players.</div>
+  </div>
+  <div class="fg">
+    <div class="fc" onclick="go('analysis')"><div class="fi">🎥</div><div class="fn">Delivery Analysis</div><div class="fd">Dual angle AI coaching report</div></div>
+    <div class="fc" onclick="go('bowls')"><div class="fi">🔴</div><div class="fn">Bowl Selector</div><div class="fd">Models, trajectory and sizing</div></div>
+    <div class="fc" onclick="go('speed')"><div class="fi">🌿</div><div class="fn">Green Speed</div><div class="fd">Measure and adapt to any surface</div></div>
+    <div class="fc" onclick="go('drills')"><div class="fi">📚</div><div class="fn">Drills Library</div><div class="fd">World Bowls coaching drills</div></div>
+    <div class="fc" onclick="go('tactics')"><div class="fi">🎯</div><div class="fn">Shot Tactics</div><div class="fd">Shot types, head reading and strategy</div></div>
+    <div class="fc" style="opacity:.4;cursor:default"><div class="fi">📈</div><div class="fn">Player Progress</div><div class="fd">Coming soon</div></div>
+  </div>
+</div><div class="pg" id="pg-analysis">
+  <div class="ph"><div class="pt">🎥 Delivery Analysis</div><div class="pd">Upload side-on and front-on videos for a complete dual-angle coaching report</div></div>
+  <div id="aForm">
+    <div class="eb" id="aErr"></div>
+    <div class="card">
+      <div class="ct">👤 Player Details</div>
+      <label class="il">Player Name</label>
+      <input type="text" class="ti" id="aName" placeholder="e.g. John Smith">
+      <label class="il">Coach Notes (optional)</label>
+      <textarea class="ti" id="aNotes" placeholder="e.g. Tends to drop shoulder, struggling with line on fast greens..."></textarea>
+    </div>
+    <div class="card">
+      <div class="ct">↔️ Side-On Video</div>
+      <div style="background:rgba(45,155,90,.1);border:1px solid rgba(45,155,90,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:rgba(26,42,26,.7);margin-bottom:12px"><strong style="color:var(--gl)">Tip:</strong> Stand 3-4m to the side. Keep full body in frame. Required.</div>
+      <div class="upa" onclick="document.getElementById('fSide').click()">
+        <div class="upi">🔴🟡⚪</div>
+        <div class="upt" id="utSide">Tap to select side-on video</div>
+        <div class="ups" id="usSide">MP4, MOV or any format</div>
+      </div>
+      <input type="file" id="fSide" accept="video/*" style="display:none" onchange="handleVid(event,'side')">
+      <div class="vp" id="vpSide"><video id="vSide" controls playsinline></video></div>
+    </div>
+    <div class="card">
+      <div class="ct">⬆️ Front-On Video <span style="font-size:12px;font-weight:400;color:var(--gr)">(Recommended)</span></div>
+      <div style="background:rgba(45,155,90,.1);border:1px solid rgba(45,155,90,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:rgba(26,42,26,.7);margin-bottom:12px"><strong style="color:var(--gl)">Tip:</strong> 5-6m directly in front, in line with the jack. Stay clear of the bowl!</div>
+      <div class="upa" onclick="document.getElementById('fFront').click()">
+        <div class="upi">🔴🟡⚪</div>
+        <div class="upt" id="utFront">Tap to select front-on video</div>
+        <div class="ups" id="usFront">Adds line and shoulder analysis</div>
+      </div>
+      <input type="file" id="fFront" accept="video/*" style="display:none" onchange="handleVid(event,'front')">
+      <div class="vp" id="vpFront"><video id="vFront" controls playsinline></video></div>
+    </div>
+    <button class="btn" id="aBtn" onclick="runAnalysis()" disabled>🔴🟡⚪ Analyse Delivery</button>
+  </div>
+  <div class="load" id="aLoad"><div class="spin"></div><div class="lt">Analysing Delivery</div><div class="ls">Reading technique across both angles...</div></div>
+  <div id="aResults"></div>
+</div><div class="pg" id="pg-bowls">
+  <div class="ph"><div class="pt">🔴 Bowl Selector</div><div class="pd">Hand sizing, full model guide with trajectory diagrams and recommendations</div></div>
+  <div class="stabs">
+    <div class="stab act" id="bt-sizing" onclick="bTab('sizing')">✋ Sizing</div>
+    <div class="stab" id="bt-models" onclick="bTab('models')">🔴 Models</div>
+    <div class="stab" id="bt-rec" onclick="bTab('rec')">⭐ Recommend</div>
+  </div>
+  <div class="ss" id="bs-sizing" style="display:block">
+    <div class="card">
+      <div class="ct">✋ Bowl Size Guide</div>
+      <div class="ib" style="margin-bottom:10px"><strong>Finger and Thumb Method</strong>Hold a bowl and wrap fingers and thumb around it. Fingertips should just meet underneath. Overlap means go bigger. Cannot reach means go smaller.</div>
+      <div class="ib"><strong>Span Test</strong>Measure thumb tip to little finger tip in cm. Use the chart below as your starting point.</div>
+    </div>
+    <div class="card">
+      <div class="ct">📐 Span Chart</div>
+      <div class="gr2"><div class="gb sel" id="gMen" onclick="bGender('men')">👨 Men</div><div class="gb" id="gLad" onclick="bGender('ladies')">👩 Ladies</div></div>
+      <table class="spt"><thead><tr><th>Span</th><th>Size</th><th>Notes</th></tr></thead><tbody id="spanBody"></tbody></table>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Quick Calculator</div>
+      <label class="il">Hand span</label>
+      <select id="spanSel" onchange="calcSize()">
+        <option value="">Select span...</option>
+        <option value="16">Under 17cm</option><option value="17">17-18cm</option>
+        <option value="18">18-19cm</option><option value="19">19-20cm</option>
+        <option value="20">20-21cm</option><option value="21">21-22cm</option>
+        <option value="22">22-23cm</option><option value="23">Over 23cm</option>
+      </select>
+      <div class="szr" id="sizeRes"><div class="szn" id="sizeNum">2</div><div style="font-size:13px;color:var(--gd);font-weight:600;margin-top:4px">Suggested Bowl Size</div><div class="sznote" id="sizeNote"></div></div>
+    </div>
+  </div>
+  <div class="ss" id="bs-models">
+    <div class="card">
+      <div class="ct">🔴 Select Brand</div>
+      <div class="bg2">
+        <div class="bb" id="bbD" onclick="setBrand('drakes')"><div class="bn">Drakes Pride</div><div class="bo">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Liverpool</div></div>
+        <div class="bb" id="bbT" onclick="setBrand('taylor')"><div class="bn">Taylor</div><div class="bo">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Glasgow</div></div>
+        <div class="bb" id="bbH" onclick="setBrand('henselite')"><div class="bn">Henselite</div><div class="bo">🇦🇺 Melbourne</div></div>
+        <div class="bb" id="bbA" onclick="setBrand('aero')"><div class="bn">Aero</div><div class="bo">🇦🇺 Australia</div></div>
+      </div>
+    </div>
+    <div id="modPanel"></div>
+  </div>
+  <div class="ss" id="bs-rec">
+    <div class="card">
+      <div class="ct">🌿 Playing Conditions</div>
+      <label class="il">Surface</label>
+      <select id="rGreen" onchange="doRec()">
+        <option value="">Select surface...</option>
+        <option value="indoor">Indoor Carpet</option>
+        <option value="fast">Outdoor Fast 14-17s</option>
+        <option value="medium">Outdoor Medium 12-14s</option>
+        <option value="slow">Outdoor Slow 9-12s</option>
+      </select>
+      <label class="il">Position</label>
+      <select id="rPos" onchange="doRec()">
+        <option value="">Select position...</option>
+        <option value="lead">Lead</option><option value="second">Second</option>
+        <option value="third">Third</option><option value="skip">Skip</option>
+      </select>
+      <label class="il">Brand Preference</label>
+      <select id="rBrand" onchange="doRec()">
+        <option value="">Any brand</option>
+        <option value="drakes">Drakes Pride</option><option value="taylor">Taylor</option>
+        <option value="henselite">Henselite</option><option value="aero">Aero</option>
+      </select>
+    </div>
+    <div class="rcp" id="recPanel"><div class="rct">⭐ Recommendation</div><div class="rcb" id="recBowl"></div><div class="rca" id="recAdv"></div></div>
+  </div>
+</div><div class="pg" id="pg-speed">
+  <div class="ph"><div class="pt">🌿 Green Speed</div><div class="pd">Measure, understand and coach adaptation to any green</div></div>
+  <div class="stabs">
+    <div class="stab act" id="gt-checker" onclick="gTab('checker')">⏱️ Checker</div>
+    <div class="stab" id="gt-scale" onclick="gTab('scale')">📊 Scale</div>
+    <div class="stab" id="gt-adapt" onclick="gTab('adapt')">🎯 Adapt</div>
+  </div>
+  <div class="ss" id="gs-checker" style="display:block">
+    <div class="card">
+      <div class="ct">⏱️ Speed Checker</div>
+      <p style="font-size:13px;color:var(--gr);margin-bottom:14px">Drag to your green timing in seconds</p>
+      <div class="mtrack"></div>
+      <div class="mlbls"><span>9s Slow</span><span>12s</span><span>14s</span><span>17s</span><span>20s Fast</span></div>
+      <div class="srow">
+        <div class="swrp"><label class="slbl">Green speed</label><input type="range" id="gSlider" min="9" max="20" value="12" step="0.5" oninput="updateSpeed()"></div>
+        <div class="sdsp"><div class="snum" id="sNum">12</div><div class="sunit">secs</div></div>
+      </div>
+      <div id="sResult"></div>
+    </div>
+    <div class="card">
+      <div class="ct">📏 How to Measure</div>
+      <div class="fcard"><div class="fcico">🎳</div><div><div class="fctit">Standard Method</div><div class="fcdsc">Deliver a bowl with normal draw weight. Time from release until it stops. Average 3 readings. That is your green speed in seconds.</div></div></div>
+      <div class="ib" style="margin-top:8px"><strong>Coaching Tip</strong>Green speed changes during the day. Measure before sessions and note conditions to build a picture over the season.</div>
+    </div>
+  </div>
+  <div class="ss" id="gs-scale">
+    <div class="card">
+      <div class="ct">📊 Speed Scale</div>
+      <p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:14px">Higher seconds means faster green. The bowl rolls further for the same delivery effort.</p>
+      <div class="scgrid"><div class="scard slow"><div class="scnum">9-12s</div><div class="sclbl">Slow</div><div class="scwhr">🇬🇧 UK early season, wet</div></div><div class="scard med"><div class="scnum">12-14s</div><div class="sclbl">Medium</div><div class="scwhr">🇬🇧 UK summer conditions</div></div></div>
+      <div class="scgrid"><div class="scard fast"><div class="scnum">14-17s</div><div class="sclbl">Fast</div><div class="scwhr">🏠 Indoor, 🇦🇺 Australia</div></div><div class="scard vfast"><div class="scnum">17-20s</div><div class="sclbl">Very Fast</div><div class="scwhr">🇦🇺 Premium greens</div></div></div>
+    </div>
+    <div class="card">
+      <div class="ct">🌿 Factors Affecting Speed</div>
+      <div class="fcard"><div class="fcico">✂️</div><div><div class="fctit">Grass Length</div><div class="fcdsc">The biggest factor. 1mm difference can change speed by several seconds.</div><span class="fcimp imp-f">Shorter = Faster</span></div></div>
+      <div class="fcard"><div class="fcico">💧</div><div><div class="fctit">Moisture</div><div class="fcdsc">Wet greens are significantly slower. Greens speed up as they dry during the day.</div><span class="fcimp imp-s">Wet = Slower</span></div></div>
+      <div class="fcard"><div class="fcico">☀️</div><div><div class="fctit">Temperature</div><div class="fcdsc">Hot dry conditions firm the surface. Why Australian greens are naturally faster.</div><span class="fcimp imp-f">Hot and Dry = Faster</span></div></div>
+      <div class="fcard"><div class="fcico">🔄</div><div><div class="fctit">Rolling</div><div class="fcdsc">Regular rolling compacts the surface and increases speed.</div><span class="fcimp imp-f">Regular Rolling = Faster</span></div></div>
+    </div>
+  </div>
+  <div class="ss" id="gs-adapt">
+    <div class="card"><div class="ct">🎯 The Key Principle</div><p style="font-size:14px;line-height:1.8"><strong>Faster green</strong> means less weight and wider line.<br><strong>Slower green</strong> means more weight and narrower line.<br><br>Bias effect increases significantly on faster greens.</p></div>
+    <div><div class="adhd slow">🐢 Slow Green 9-12 seconds</div><div class="atip"><div class="atic">💪</div><div class="atxt"><strong>More Weight</strong>Fuller arm swing and positive step-through. The green gives less momentum.</div></div><div class="atip"><div class="atic">➡️</div><div class="atxt"><strong>Narrow the Line</strong>Less bias effect on slow surfaces. Most players do not narrow enough.</div></div><div class="atip"><div class="atic">🎳</div><div class="atxt"><strong>Bowl Choice</strong>Wider-biased bowl compensates — XP, Legacy SL, Tiger EVO, Sonic.</div></div></div>
+    <div style="margin-top:14px"><div class="adhd fast">⚡ Fast Green 14-17 seconds</div><div class="atip"><div class="atic">🪶</div><div class="atxt"><strong>Less Weight</strong>Shorten backswing. Small errors are amplified on fast surfaces.</div></div><div class="atip"><div class="atic">↗️</div><div class="atxt"><strong>Wider Line</strong>Bias effect increases dramatically. Most players do not go wide enough.</div></div><div class="atip"><div class="atic">🎳</div><div class="atxt"><strong>Bowl Choice</strong>Narrower bias — d-tec, Vector VS, Tiger TX, Quantum.</div></div></div>
+    <div style="margin-top:14px"><div class="adhd ind">🏠 Indoor vs Outdoor</div><div class="atip"><div class="atic">📉</div><div class="atxt"><strong>Going Outdoor After Indoor</strong>Significant slow-down. Be patient and let the green show what it needs.</div></div><div class="atip"><div class="atic">📈</div><div class="atxt"><strong>Going Indoor After Outdoor</strong>Lightning fast by comparison. Widen line dramatically. Allow 4-6 ends to calibrate.</div></div></div>
+  </div>
+</div><div class="pg" id="pg-drills">
+  <div class="ph"><div class="pt">📚 Drills Library</div><div class="pd">World Bowls endorsed coaching drills — beginner to advanced</div></div>
+  <div class="stabs">
+    <div class="stab act" id="dt-basic" onclick="dTab('basic')">🌱 Basic</div>
+    <div class="stab" id="dt-prog" onclick="dTab('prog')">📈 Progressive</div>
+    <div class="stab" id="dt-games" onclick="dTab('games')">🎮 Games</div>
+    <div class="stab" id="dt-circuit" onclick="dTab('circuit')">⚡ Circuit</div>
+  </div>
+  <div class="ss" id="ds-basic" style="display:block">
+    <div class="ib" style="margin-bottom:14px"><strong>How to Use</strong>Run these in coaching sessions. Vary mat position — short, medium and long. Record results for tracking progress.</div>
+    <div class="dcard"><div class="dtit">🎯 Skill 1 — Jack Delivery and First Bowl Effect</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">Player delivers jack to target mark then delivers bowl to finish as close as possible to the jack.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Assess pre-shot routine, mat approach, delivery action and follow through. Check first bowl effectiveness — correct hand and line from the start?</div></div></div>
+    <div class="dcard"><div class="dtit">🎯 Skill 2 — Shot Recovery</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">Place an opposition bowl close to the jack. Player must draw to beat it — finish closer to the jack.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Does the player assess the head before delivering? Correct hand? Is weight control sufficient to just beat the shot?</div></div></div>
+    <div class="dcard"><div class="dtit">🎯 Skill 3 — Draw Off Line</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">Place jack close to rink boundary at 25m. Player draws two bowls forehand and two backhand to the jack.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Can the player adjust their line for an off-centre jack? This drill exposes hand weakness quickly.</div></div></div>
+    <div class="dcard"><div class="dtit">🎯 Skill 4 — Grouping No Jack</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">No jack. Player bowls first bowl — it becomes the target. Next three bowls delivered to group as close as possible.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Removes mental pressure of a jack. Focus shifts to replicating the same delivery. Reveals line and length consistency issues.</div></div></div>
+    <div class="dcard"><div class="dtit">🎯 Skill 5 — Draw to the Ditch</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">Place jack on 2m mark. All four bowls must finish between the jack and the ditch.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Excellent weight control drill. Brilliant for skips who need consistent back bowl placement.</div></div></div>
+    <div class="dcard"><div class="dtit">🎳 Warm Up — Delivery Line Drill</div><div class="dset"><div class="dstt">Setup</div><div class="dstd">Place two discs along the intended delivery line. Player bowls over or between the discs. Outcome is NOT the priority.</div></div><div class="dfoc"><div class="dfot">💡 Coach Focus</div><div class="dfod">Assess pre-shot routine, mat approach, delivery action and follow through. One of the few drills where the result does not matter.</div></div></div>
+  </div>
+  <div class="ss" id="ds-prog">
+    <div class="dcard"><div class="dtit">📈 Progressive Drawing Drill</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">3 players per rink, 2 bowls each. All draw to a placed jack. Closest bowl moves up one rink. Furthest moves down. Run for 15 ends.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">Identifies consistently accurate players. Exposes hand weaknesses. Creates healthy competitive pressure in training.</div></div></div>
+    <div class="dcard"><div class="dtit">📈 40 Bowl Skills Assessment</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">10 ends, 4 bowls per end. Ends 1-5: 2 forehand then 2 backhand. Ends 6-10: reverse. Score each bowl: E=Effective S=Short L=Long W=Wide N=Narrow.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">Comprehensive snapshot of a player's all-round game. Run at regular intervals to track improvement over a season.</div></div></div>
+    <div class="dcard"><div class="dtit">📈 Short Bowl Penalty Game</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Normal game. Any bowl finishing more than 30cm short of the jack is removed immediately.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">Quickly eliminates the habit of consistently bowling short. Creates real accountability in a game-like context.</div></div></div>
+    <div class="dcard"><div class="dtit">📈 Line and Speed Adjustment</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Player draws to target X. Coach repositions the target. Player must make the necessary adjustments with their next bowl.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">Tests the most critical in-game skill — the ability to adjust after seeing where your bowl finishes.</div></div></div>
+  </div>
+  <div class="ss" id="ds-games">
+    <div class="dcard"><div class="dtit">🎮 Rotating Positions Game</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Fours game, 4 ends per set. Each player starts with 4 bowls reducing by one each end. After 4 ends all players rotate position. Then 3, then 2, then 1 bowl.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">Builds empathy across positions. Players understand what each role needs. Excellent for building team cohesion.</div></div></div>
+    <div class="dcard"><div class="dtit">🎮 Phantom Bowler</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Coach places opposition bowls on the head to create specific tactical situations. Team plays normally against the placed bowls.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">The most powerful tactical coaching tool available. Coach controls every scenario. Ask questions to develop player thinking.</div></div></div>
+    <div class="dcard"><div class="dtit">🎮 Super Challenge</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:12px">Squad in two teams. Each player plays ONE bowl over TWO ends to find a winner. Closest counting bowls win the set.</p><div class="dfoc"><div class="dfot">💡 Coach Value</div><div class="dfod">High pressure single bowl situations. Excellent for developing composure under competitive pressure.</div></div></div>
+  </div>
+  <div class="ss" id="ds-circuit">
+    <div class="card"><div class="ct">⚡ 8-Station Circuit</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">World Bowls endorsed. Players keep individual scores and move between stations. 8 rinks required.</p></div>
+    <div class="dcard"><div class="dtit">Station 1 — Jack Delivery Accuracy</div><div class="dstd" style="font-size:13px;line-height:1.6">8 jacks. Deliver 2 to each of 4 markers at different lengths. Score jacks landing within the target zone.</div></div>
+    <div class="dcard"><div class="dtit">Station 2 — Ditch Control</div><div class="dstd" style="font-size:13px;line-height:1.6">Score only jacks finishing between the ditch and the 2m mark.</div></div>
+    <div class="dcard"><div class="dtit">Station 3 — Line Taking</div><div class="dstd" style="font-size:13px;line-height:1.6">Bowl between markers. Gradually narrow until bowling only over a discus.</div></div>
+    <div class="dcard"><div class="dtit">Station 4 — Weight and Centre Return</div><div class="dstd" style="font-size:13px;line-height:1.6">2m mat, forehand and backhand. Score bowls returning to within 30cm either side of centre.</div></div>
+    <div class="dcard"><div class="dtit">Station 5 — 2m Zone Play</div><div class="dstd" style="font-size:13px;line-height:1.6">Place cones 1m either side of jack. All bowls must finish between cone and jack.</div></div>
+    <div class="dcard"><div class="dtit">Station 6 — Playing Around a Bowl</div><div class="dstd" style="font-size:13px;line-height:1.6">Draw around a wing bowl to jack. Draw between jack and bowl 2m behind. Repeat on other hand.</div></div>
+    <div class="dcard"><div class="dtit">Station 7 — Target Zone</div><div class="dstd" style="font-size:13px;line-height:1.6">Cones 30cm either side of centre. Draw into zone without touching cones. 2 backhand, 2 forehand.</div></div>
+    <div class="dcard"><div class="dtit">Station 8 — Mixed Shots</div><div class="dstd" style="font-size:13px;line-height:1.6">1. Firm force 2 bowls backhand. 2. Controlled force 2 bowls forehand. 3. Drive one, draw to off-line jack.</div></div>
+  </div>
+</div><div class="pg" id="pg-tactics">
+  <div class="ph"><div class="pt">🎯 Shot Selection and Tactics</div><div class="pd">Shot types, positions, head reading and match strategy</div></div>
+  <div class="stabs">
+    <div class="stab act" id="tt-shots" onclick="tTab('shots')">🎳 Shots</div>
+    <div class="stab" id="tt-pos" onclick="tTab('pos')">👥 Positions</div>
+    <div class="stab" id="tt-head" onclick="tTab('head')">🧠 Head Reading</div>
+    <div class="stab" id="tt-strat" onclick="tTab('strat')">♟️ Strategy</div>
+  </div>
+  <div class="ss" id="ts-shots" style="display:block">
+    <div class="sshot"><div class="sstit">🎳 The Draw Shot</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">The foundation of all lawn bowls. Deliver with just enough weight to reach the jack on the correct line.</p><div class="ssgrid"><div class="sswhn"><strong style="display:block;margin-bottom:4px">When to use</strong>Always the first choice. Draw to build the head before considering weighted shots.</div><div class="sstip"><strong style="display:block;margin-bottom:4px">Coach tip</strong>Consistency over distance. A player who draws well wins more than one who drives well.</div></div></div>
+    <div class="sshot"><div class="sstit">🎳 The Positional Shot</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">A draw played to a specific position — not necessarily to the jack. Used to cover, block or protect.</p><div class="ssgrid"><div class="sswhn"><strong style="display:block;margin-bottom:4px">When to use</strong>Holding shot — place a bowl 1-2m behind the jack. Losing — cover potential jack movement.</div><div class="sstip"><strong style="display:block;margin-bottom:4px">Coach tip</strong>Most club players do not play positional bowls enough. Teach them to think 2-3 bowls ahead.</div></div></div>
+    <div class="sshot"><div class="sstit">🎳 Controlled Weight 1-2m Through</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">Extra weight to push a bowl 1-2m through the jack area without killing the end.</p><div class="ssgrid"><div class="sswhn"><strong style="display:block;margin-bottom:4px">When to use</strong>To remove a shot bowl without disturbing the whole head. Precision over power.</div><div class="sstip"><strong style="display:block;margin-bottom:4px">Coach tip</strong>The hardest shot to teach. Focus on smooth delivery. Player must commit to a specific weight.</div></div></div>
+    <div class="sshot"><div class="sstit">🎳 The Drive</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-bottom:10px">Full pace delivery. Used to kill the end, remove multiple bowls or drive the jack into the ditch.</p><div class="ssgrid"><div class="sswhn"><strong style="display:block;margin-bottom:4px">When to use</strong>Last resort when down multiple shots. Use sparingly.</div><div class="sstip"><strong style="display:block;margin-bottom:4px">Coach tip</strong>Must be practised constantly. A poor drive is worse than not driving. It is a tool of last resort not a panic shot.</div></div></div>
+  </div>
+  <div class="ss" id="ts-pos">
+    <div class="pcard"><div class="ptit">👥 The Lead</div><div class="prole"><div class="prt">Primary Role</div>Sets up the head. Draw as close as possible to the jack on both hands.</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-top:10px">Key qualities: Consistent draw shot, strong on both hands, good first bowl effectiveness. Never attack the head — always draw.</p></div>
+    <div class="pcard"><div class="ptit">👥 The Second</div><div class="prole"><div class="prt">Primary Role</div>Builds on the lead's work. If lead holds shot, consolidate. If lead is losing, recover the situation.</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-top:10px">Key qualities: Versatile all-rounder, draws and positional shots, records the score. Should never attack the head without instruction from the skip.</p></div>
+    <div class="pcard"><div class="ptit">👥 The Third</div><div class="prole"><div class="prt">Primary Role</div>Gets the skip into the best possible position. Must draw, play weighted shots, and read the head well enough to advise the skip accurately.</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-top:10px">Key qualities: Sound tactical awareness, accurate head reading, good communication. Unsolicited advice to the skip should be avoided.</p></div>
+    <div class="pcard"><div class="ptit">👥 The Skip</div><div class="prole"><div class="prt">Primary Role</div>Leads the team tactically, technically and emotionally. Sets jack lengths, directs shot selection for all team members.</div><p style="font-size:13px;color:var(--gr);line-height:1.6;margin-top:10px">Key qualities: Master of all shots, strong tactical mind, excellent head reading, composure under pressure.</p><div class="ib" style="margin-top:10px"><strong>Common Skip Error</strong>Becoming unreceptive to team input. The best skips consult their third and remain open to tactical discussion.</div></div>
+  </div>
+  <div class="ss" id="ts-head">
+    <div class="card"><div class="ct">🧠 The 5 Questions</div><p style="font-size:14px;color:var(--dk);line-height:2.1">Before calling a shot:<br><br><strong>1. Who holds the shot?</strong><br><strong>2. How many shots?</strong><br><strong>3. Where is the danger?</strong><br><strong>4. What shot is available?</strong><br><strong>5. What is the risk vs reward?</strong></p></div>
+    <div class="card"><div class="ct">🧠 Reading the Back</div><p style="font-size:13px;color:var(--gr);line-height:1.7">Many players focus only on bowls near the jack and miss critical back bowls. Always assess which team has back bowls and where, if the jack moves who benefits, and whether the opponent has a trap bowl that scores multiple shots if the jack moves there.</p></div>
+    <div class="card"><div class="ct">🧠 Shot or Jack Situation</div><div style="background:var(--gp);border-radius:10px;padding:14px;margin-bottom:8px"><div style="font-weight:700;font-size:13px;color:var(--gd);margin-bottom:4px">If you own the shot</div><div style="font-size:13px;color:var(--dk);line-height:1.6">Place back bowls behind the jack in catching positions. Cover any re-spot positions to protect what you have.</div></div><div style="background:#fff8e6;border-radius:10px;padding:14px"><div style="font-weight:700;font-size:13px;color:#7a5010;margin-bottom:4px">If opposition holds the shot</div><div style="font-size:13px;color:#5a3a00;line-height:1.6">Direct your lead to get a bowl into the head. First bowl 1-2m behind jack, second bowl jack-high to create a larger target.</div></div></div>
+  </div>
+  <div class="ss" id="ts-strat">
+    <div class="card"><div class="ct">♟️ Jack Length Strategy</div><p style="font-size:13px;color:var(--dk);line-height:1.8">Play long when you are stronger at long ends or green is fast.<br><br>Play short when your team is stronger short or opposition lead dominates long ends.<br><br>Vary the length — unpredictability prevents the opposition settling into a pattern.</p></div>
+    <div class="card"><div class="ct">♟️ Team Communication</div><p style="font-size:13px;color:var(--dk);line-height:1.8">Role clarity wins games — clear expectations, players trust each other to deliver.<br><br>Simple communication — clear concise instructions from skip. Complex tactical discussions belong in the changing room.<br><br>Encouragement over criticism — a quiet supportive word is worth more than frustration.</p></div>
+    <div class="card"><div class="ct">♟️ Singles Strategy</div><p style="font-size:13px;color:var(--dk);line-height:1.8">Opening bowls — play like a lead, draw shots to build early position.<br><br>Third bowl is critical — your most tactically important bowl. Consolidate or recover.<br><br>Avoid unnecessary drives — every aggressive shot risks scattering your own bowls.</p><div class="ib" style="margin-top:10px"><strong>Singles Mindset</strong>You must fulfil all four team roles yourself. Assess the head before every bowl as if you were the skip — because you are.</div></div>
+  </div>
+</div><div class="bnav">
+  <div class="ni act" id="ni-home" onclick="go('home')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div></div>
+  <div class="ni" id="ni-analysis" onclick="go('analysis')"><div class="ni-icon">🎥</div><div class="ni-lbl">Analysis</div></div>
+  <div class="ni" id="ni-bowls" onclick="go('bowls')"><div class="ni-icon">🔴</div><div class="ni-lbl">Bowls</div></div>
+  <div class="ni" id="ni-speed" onclick="go('speed')"><div class="ni-icon">🌿</div><div class="ni-lbl">Green</div></div>
+  <div class="ni" id="ni-drills" onclick="go('drills')"><div class="ni-icon">📚</div><div class="ni-lbl">Drills</div></div>
+  <div class="ni" id="ni-tactics" onclick="go('tactics')"><div class="ni-icon">🎯</div><div class="ni-lbl">Tactics</div></div>
+</div><script>
+// ── NAVIGATION ──
+function go(p) {
+  var pgs = document.getElementsByClassName('pg');
+  for (var i = 0; i < pgs.length; i++) pgs[i].style.display = 'none';
+  var nis = document.getElementsByClassName('ni');
+  for (var j = 0; j < nis.length; j++) nis[j].className = 'ni';
+  var pg = document.getElementById('pg-' + p);
+  var ni = document.getElementById('ni-' + p);
+  if (pg) pg.style.display = 'block';
+  if (ni) ni.className = 'ni act';
+  window.scrollTo(0, 0);
+}
+
+// ── SUB TABS ──
+function bTab(t) {
+  var tabs = ['sizing','models','rec'];
+  for (var i = 0; i < tabs.length; i++) {
+    var el = document.getElementById('bs-' + tabs[i]);
+    var tb = document.getElementById('bt-' + tabs[i]);
+    if (el) el.style.display = tabs[i] === t ? 'block' : 'none';
+    if (tb) tb.className = tabs[i] === t ? 'stab act' : 'stab';
+  }
+}
+function gTab(t) {
+  var tabs = ['checker','scale','adapt'];
+  for (var i = 0; i < tabs.length; i++) {
+    var el = document.getElementById('gs-' + tabs[i]);
+    var tb = document.getElementById('gt-' + tabs[i]);
+    if (el) el.style.display = tabs[i] === t ? 'block' : 'none';
+    if (tb) tb.className = tabs[i] === t ? 'stab act' : 'stab';
+  }
+}
+function dTab(t) {
+  var tabs = ['basic','prog','games','circuit'];
+  for (var i = 0; i < tabs.length; i++) {
+    var el = document.getElementById('ds-' + tabs[i]);
+    var tb = document.getElementById('dt-' + tabs[i]);
+    if (el) el.style.display = tabs[i] === t ? 'block' : 'none';
+    if (tb) tb.className = tabs[i] === t ? 'stab act' : 'stab';
+  }
+}
+function tTab(t) {
+  var tabs = ['shots','pos','head','strat'];
+  for (var i = 0; i < tabs.length; i++) {
+    var el = document.getElementById('ts-' + tabs[i]);
+    var tb = document.getElementById('tt-' + tabs[i]);
+    if (el) el.style.display = tabs[i] === t ? 'block' : 'none';
+    if (tb) tb.className = tabs[i] === t ? 'stab act' : 'stab';
+  }
+}
+
+// ── BOWL SELECTOR DATA ──
+var spanMen = [
+  {s:'Under 18cm',z:'00 or 0',n:'Very small hands — try size 0 first'},
+  {s:'18-19cm',z:'0 or 1',n:'Small hands — size 1 good starting point'},
+  {s:'19-20cm',z:'1',n:'Average small — size 1 recommended'},
+  {s:'20-21cm',z:'2',n:'Average — Size 2 most popular mens size'},
+  {s:'21-22cm',z:'2 or 3',n:'Above average — try both sizes'},
+  {s:'22-23cm',z:'3',n:'Large hands — size 3 recommended'},
+  {s:'Over 23cm',z:'3 or 4',n:'Very large hands — size 3 or 4'}
+];
+var spanLadies = [
+  {s:'Under 17cm',z:'000 or 00',n:'Small hands — try smallest sizes first'},
+  {s:'17-18cm',z:'00 or 0',n:'Size 00 recommended'},
+  {s:'18-19cm',z:'0',n:'Most common ladies size'},
+  {s:'19-20cm',z:'0 or 1',n:'Size 0 most popular, try 1 too'},
+  {s:'20-21cm',z:'1',n:'Second most popular ladies size'},
+  {s:'21-22cm',z:'1 or 2',n:'Try size 1 first'},
+  {s:'Over 22cm',z:'2',n:'Large hands for ladies'}
+];
+var sizeQ = {16:{z:'00 or 0',n:'Very small span.'},17:{z:'0',n:'Small span — size 0 recommended.'},18:{z:'0 or 1',n:'Try both — comfort is the key test.'},19:{z:'1',n:'Size 1 suits your span.'},20:{z:'2',n:'Size 2 — most popular mens size.'},21:{z:'2 or 3',n:'Try both sizes.'},22:{z:'3',n:'Size 3 suits your span.'},23:{z:'3 or 4',n:'Large hands — size 3 or 4.'}};
+var brands = {
+  drakes:{name:'Drakes Pride',url:'https://www.drakespride.co.uk/uk-models-rest-of-world',vid:'UCc5nFF5YzI',models:[
+    {n:'Professional',b:'mid',p:55,d:'Most popular bowl in England. Mid-bias with gradual consistent finish. Suits indoor and outdoor.',i:true,o:true,pos:['lead','second','third','skip'],gs:['indoor','fast','medium','slow']},
+    {n:'Pro-50',b:'mid',p:55,d:'Identical to Professional with unique Channel Grip — two deep channels that improve control.',i:true,o:true,pos:['lead','second','third','skip'],gs:['indoor','fast','medium','slow']},
+    {n:'d-tec',b:'narrow',p:35,d:'Narrower than the Professional. Ideal indoor bowl for those who prefer a tighter line.',i:true,o:false,pos:['lead','second'],gs:['indoor','fast']},
+    {n:'XP',b:'wide',p:75,d:'Widest Drakes Pride bias. Perfect for slow outdoor greens or early season play.',i:false,o:true,pos:['third','skip'],gs:['slow','medium']}
+  ]},
+  taylor:{name:'Thomas Taylor',url:'https://www.taylorbowls.com/browse/c-Lawn-Bowls-1/',vid:'SNyKOjmQ3VU',models:[
+    {n:'Lazer',b:'narrow',p:25,d:'Narrowest Taylor bowl. Tight line for fast indoor rinks.',i:true,o:false,pos:['lead'],gs:['indoor','fast']},
+    {n:'Vector VS',b:'narrow',p:35,d:'Narrow bias with clean predictable line. Primarily indoor.',i:true,o:false,pos:['lead','second'],gs:['indoor','fast']},
+    {n:'Ace',b:'mid',p:50,d:'Versatile mid-bias for indoor and outdoor. Most popular Taylor model.',i:true,o:true,pos:['lead','second','third'],gs:['indoor','fast','medium']},
+    {n:'International',b:'mid',p:60,d:'Mid-bias with stronger finish. Popular at county and national level.',i:false,o:true,pos:['second','third','skip'],gs:['medium','slow']},
+    {n:'Legacy SL',b:'wide',p:70,d:'Wider bias for slower outdoor greens.',i:false,o:true,pos:['third','skip'],gs:['medium','slow']}
+  ]},
+  henselite:{name:'Henselite',url:'https://henselite.com/bowls/',vid:null,models:[
+    {n:'Tiger TX',b:'narrow',p:30,d:'Narrowest Henselite. Tight line for indoor and fast surfaces.',i:true,o:false,pos:['lead'],gs:['indoor','fast']},
+    {n:'Tiger II',b:'mid',p:48,d:'Very popular mid-bias. Excellent all-rounder for indoor and outdoor.',i:true,o:true,pos:['lead','second','third'],gs:['indoor','fast','medium']},
+    {n:'Tiger Pro',b:'mid',p:55,d:'Slightly wider than Tiger II. Versatile for indoor and outdoor.',i:true,o:true,pos:['second','third','skip'],gs:['indoor','medium','slow']},
+    {n:'Tiger EVO',b:'wide',p:68,d:'Wider outdoor model for slower greens.',i:false,o:true,pos:['third','skip'],gs:['medium','slow']}
+  ]},
+  aero:{name:'Aero',url:'https://aerobowls.com/collections/bowls',vid:null,models:[
+    {n:'Quantum',b:'mid',p:45,d:'Versatile mid-bias. Aero bowls begin to turn earlier — about halfway between mat and jack.',i:true,o:true,pos:['lead','second','third'],gs:['indoor','fast','medium']},
+    {n:'GrooVe',b:'mid',p:55,d:'Slightly wider than Quantum. Excellent indoor and outdoor with early-turning trajectory.',i:true,o:true,pos:['second','third','skip'],gs:['indoor','medium','slow']},
+    {n:'Sonic',b:'wide',p:70,d:'Widest Aero model. Mainly outdoor, slower conditions and skips needing maximum draw.',i:false,o:true,pos:['third','skip'],gs:['medium','slow']}
+  ]}
+};
+
+var curGender = 'men';
+var curBrand = null;
+
+function bGender(g) {
+  curGender = g;
+  document.getElementById('gMen').className = g === 'men' ? 'gb sel' : 'gb';
+  document.getElementById('gLad').className = g === 'ladies' ? 'gb sel' : 'gb';
+  renderSpan(g);
+}
+
+function renderSpan(g) {
+  var data = g === 'men' ? spanMen : spanLadies;
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    html += '<tr><td>' + data[i].s + '</td><td><strong>' + data[i].z + '</strong></td><td style="font-size:12px;color:var(--gr)">' + data[i].n + '</td></tr>';
+  }
+  document.getElementById('spanBody').innerHTML = html;
+}
+
+function calcSize() {
+  var v = document.getElementById('spanSel').value;
+  var r = document.getElementById('sizeRes');
+  if (!v) { r.style.display = 'none'; return; }
+  var d = sizeQ[v];
+  if (!d) return;
+  document.getElementById('sizeNum').textContent = d.z;
+  document.getElementById('sizeNote').textContent = d.n;
+  r.style.display = 'block';
+}
+
+function setBrand(b) {
+  curBrand = b;
+  var bkeys = ['drakes','taylor','henselite','aero'];
+  var bids = ['bbD','bbT','bbH','bbA'];
+  for (var i = 0; i < bkeys.length; i++) {
+    document.getElementById(bids[i]).className = bkeys[i] === b ? 'bb sel' : 'bb';
+  }
+  renderModels();
+}
+
+function bClass(b) { return b === 'narrow' ? 'mnar' : b === 'wide' ? 'mwid' : 'mmid'; }
+function bLabel(b) { return b === 'narrow' ? 'Narrow' : b === 'wide' ? 'Wide' : 'Mid Bias'; }
+function bColor(b) { return b === 'narrow' ? '#2255aa' : b === 'wide' ? '#cc6600' : '#1a6b3c'; }
+
+function drawTraj(pct, color) {
+  var w=120,h=150,sx=w*.75,sy=h-10,ex=w*.38,ey=14;
+  var cf=pct/100,cpx=sx+(cf*55),cpy=h*.5,cp2x=ex-(cf*18),cp2y=h*.25;
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;margin:0 auto"><rect width="'+w+'" height="'+h+'" fill="#c8e6c9" rx="8"/><rect x="8" y="8" width="'+(w-16)+'" height="'+(h-16)+'" fill="none" stroke="#81c784" stroke-width="1" rx="4"/><circle cx="'+ex+'" cy="'+ey+'" r="5" fill="white" stroke="#666" stroke-width="1.5"/><rect x="'+(sx-12)+'" y="'+(sy-6)+'" width="24" height="10" fill="#795548" rx="2"/><path d="M '+sx+' '+(sy-6)+' C '+cpx+' '+cpy+', '+cp2x+' '+cp2y+', '+ex+' '+(ey+5)+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-dasharray="5,3" opacity=".85"/><circle cx="'+sx+'" cy="'+(sy-6)+'" r="5" fill="'+color+'" opacity=".9"/><text x="'+(ex-8)+'" y="'+(ey-8)+'" font-size="9" fill="#555" font-family="sans-serif">Jack</text><text x="'+(sx-8)+'" y="'+(h-2)+'" font-size="9" fill="#555" font-family="sans-serif">Mat</text></svg>';
+}
+
+function renderModels() {
+  if (!curBrand) return;
+  var brand = brands[curBrand];
+  var vidHtml = brand.vid ?
+    '<div class="card"><div class="ct" style="font-size:17px;margin-bottom:10px">🎬 Official Bias Path Video</div><a href="https://www.youtube.com/watch?v='+brand.vid+'" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:#ff0000;border-radius:12px;text-decoration:none;margin-bottom:8px"><span style="font-size:28px">▶️</span><div><div style="font-weight:800;font-size:14px;color:white">Watch on YouTube</div><div style="font-size:12px;color:rgba(255,255,255,.8);margin-top:2px">Official '+brand.name+' bias path comparison</div></div><span style="margin-left:auto;color:white;font-size:18px">→</span></a></div>' :
+    '<div class="ib" style="margin-bottom:14px"><strong>No Official Video</strong>Use the Jack High comparison guide below — covers all brands including '+brand.name+'.</div>';
+
+  var linksHtml = '<div class="card"><a href="'+brand.url+'" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--gp);border:2px solid var(--g);border-radius:10px;text-decoration:none;margin-bottom:8px"><span style="font-size:20px">🌐</span><div><div style="font-weight:700;font-size:14px;color:var(--gd)">'+brand.name+' Website</div><div style="font-size:12px;color:var(--gr)">Models, colours, grips and ordering</div></div><span style="margin-left:auto;color:var(--g);font-size:18px">→</span></a><a href="https://www.jackhighbowls.com/guide/lawn-bowls-bias-guide-and-trajectory-charts-2020/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff8e6;border:2px solid var(--gold);border-radius:10px;text-decoration:none"><span style="font-size:20px">📊</span><div><div style="font-weight:700;font-size:14px;color:#7a5010">Compare All Brands</div><div style="font-size:12px;color:var(--gr)">Trajectory charts — all 4 brands</div></div><span style="margin-left:auto;color:var(--gold);font-size:18px">→</span></a></div>';
+
+  var mHtml = '<div class="card"><div class="ct">🔴 '+brand.name+' Models</div>';
+  for (var i = 0; i < brand.models.length; i++) {
+    var m = brand.models[i];
+    mHtml += '<div class="mc"><div class="mmt"><span class="mmn">'+m.n+'</span><span class="mbg '+bClass(m.b)+'">'+bLabel(m.b)+'</span></div>';
+    mHtml += '<div style="display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:start;margin:10px 0"><div>'+drawTraj(m.p,bColor(m.b))+'<div style="text-align:center;font-size:10px;color:var(--gr);margin-top:4px;font-weight:600">Forehand draw</div></div>';
+    mHtml += '<div><div class="bbar"><div class="bfill" style="width:'+m.p+'%"></div></div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--gr);margin-bottom:8px"><span>Narrow</span><span>Wide</span></div><div class="mmd">'+m.d+'</div></div></div>';
+    mHtml += '<div class="mtags">'+(m.i?'<span class="mtag">🏠 Indoor</span>':'')+(m.o?'<span class="mtag">🌿 Outdoor</span>':'')+'</div></div>';
+  }
+  mHtml += '</div>';
+  document.getElementById('modPanel').innerHTML = vidHtml + linksHtml + mHtml;
+}
+
+function doRec() {
+  var green = document.getElementById('rGreen').value;
+  var pos = document.getElementById('rPos').value;
+  var pref = document.getElementById('rBrand').value;
+  var panel = document.getElementById('recPanel');
+  if (!green || !pos) { panel.className = 'rcp'; return; }
+  var keys = pref ? [pref] : ['drakes','taylor','henselite','aero'];
+  var matches = [];
+  for (var k = 0; k < keys.length; k++) {
+    var brand = brands[keys[k]];
+    for (var m = 0; m < brand.models.length; m++) {
+      var mod = brand.models[m];
+      if (mod.gs.indexOf(green) > -1 && mod.pos.indexOf(pos) > -1) {
+        matches.push({brand:brand.name,model:mod.n,desc:mod.d});
+      }
+    }
+  }
+  if (!matches.length) { panel.className = 'rcp'; return; }
+  var gl = {indoor:'indoor carpet',fast:'fast outdoor green',medium:'medium outdoor green',slow:'slow outdoor green'}[green];
+  var pl = {lead:'Lead',second:'Second',third:'Third',skip:'Skip'}[pos];
+  document.getElementById('recBowl').textContent = matches[0].brand + ' ' + matches[0].model;
+  document.getElementById('recAdv').textContent = 'For a '+pl+' on a '+gl+': '+matches[0].desc+(matches.length>1?' Also consider the '+matches[1].brand+' '+matches[1].model+'.':'');
+  panel.className = 'rcp show';
+}
+
+// ── GREEN SPEED ──
+function getSpeedData(s) {
+  if (s<=11) return {l:'SLOW',c:'#1565c0',bg:'#e3f2fd',tc:'#1565c0',sum:'Slow green — UK early season, after rain or heavy wet surfaces.',tips:[{i:'💪',t:'More weight needed — fuller arm swing and positive step-through'},{i:'➡️',t:'Narrow the aiming line — bowl curves less on slow surfaces'},{i:'🎳',t:'Wider-biased bowl recommended — XP, Legacy SL, Tiger EVO, Sonic'}]};
+  if (s<=13.5) return {l:'MEDIUM',c:'#2e7d32',bg:'#e8f5e9',tc:'#2e7d32',sum:'Medium green — typical UK summer conditions on a well-maintained outdoor green.',tips:[{i:'⚖️',t:'Standard delivery weight and line — good benchmark for all players'},{i:'🔄',t:'Mid-biased bowls ideal — Professional, Tiger II, Ace, Quantum'},{i:'✅',t:'Most players perform best on medium greens — play your natural game'}]};
+  if (s<=16.5) return {l:'FAST',c:'#e65100',bg:'#fff3e0',tc:'#e65100',sum:'Fast green — indoor carpets, Australian outdoor, or UK greens in a heatwave.',tips:[{i:'🪶',t:'Much less weight — shorten backswing, deliver gently'},{i:'↗️',t:'Widen aiming line significantly — bias effect increases dramatically'},{i:'🎳',t:'Narrower bowl gives better control — d-tec, Vector VS, Tiger TX, Quantum'}]};
+  return {l:'VERY FAST',c:'#b71c1c',bg:'#ffebee',tc:'#b71c1c',sum:'Exceptionally fast — premium Australian greens or international tournament surfaces.',tips:[{i:'🪶',t:'Minimal weight — almost float the bowl'},{i:'↗️',t:'Maximum grass — line needs to be very wide'},{i:'🧘',t:'Mental focus critical — errors are amplified on very fast surfaces'}]};
+}
+
+function updateSpeed() {
+  var val = parseFloat(document.getElementById('gSlider').value);
+  document.getElementById('sNum').textContent = val % 1 === 0 ? val : val.toFixed(1);
+  var d = getSpeedData(val);
+  var tips = '';
+  for (var i = 0; i < d.tips.length; i++) tips += '<div style="display:flex;gap:8px;font-size:13px;color:#333;padding:4px 0;line-height:1.6"><span>'+d.tips[i].i+'</span><span>'+d.tips[i].t+'</span></div>';
+  document.getElementById('sResult').innerHTML = '<div style="background:'+d.bg+';border-radius:12px;padding:16px"><div style="display:inline-block;background:'+d.c+';color:white;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:2px;padding:4px 16px;border-radius:20px;margin-bottom:10px">'+d.l+'</div><div style="font-size:13px;color:'+d.tc+';font-weight:600;margin-bottom:10px">'+d.sum+'</div>'+tips+'</div>';
+}
+
+// ── ANALYSIS ──
+var vFiles = {side:null,front:null};
+
+function handleVid(event, angle) {
+  var file = event.target.files[0];
+  if (!file) return;
+  vFiles[angle] = file;
+  var s = angle === 'side' ? 'Side' : 'Front';
+  document.getElementById('v'+s).src = URL.createObjectURL(file);
+  document.getElementById('vp'+s).style.display = 'block';
+  document.getElementById('ut'+s).textContent = '✅ ' + file.name;
+  document.getElementById('us'+s).textContent = (file.size/1024/1024).toFixed(1) + ' MB';
+  document.getElementById('aBtn').disabled = !vFiles.side;
+}
+
+function showErr(msg) {
+  var b = document.getElementById('aErr');
+  b.textContent = msg;
+  b.style.display = 'block';
+  setTimeout(function() { b.style.display = 'none'; }, 7000);
+}
+
+async function runAnalysis() {
+  var name = document.getElementById('aName').value.trim() || 'Player';
+  var notes = document.getElementById('aNotes').value.trim();
+  var hasFront = !!vFiles.front;
+  var angleLabel = hasFront ? 'Dual Angle Side and Front' : 'Side-on Only';
+  document.getElementById('aForm').style.display = 'none';
+  document.getElementById('aLoad').style.display = 'block';
+  window.scrollTo(0,0);
+  try {
+    var prompt = 'You are an expert lawn bowls coach.\n\nPlayer: ' + name + '\nAngles: ' + angleLabel + '\n' + (notes ? 'Notes: ' + notes + '\n' : '') + '\nProvide thorough coaching analysis. Respond ONLY with JSON no markdown:\n{"overallScore":<1-10>,"summary":"<overview>","categories":[{"name":"Stance and Grip","icon":"🦵","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"},{"name":"Approach and Steps","icon":"👣","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"},{"name":"Arm Swing","icon":"💪","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"},{"name":"Release and Delivery","icon":"🔴","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"},{"name":"Follow Through","icon":"🙌","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"},{"name":"Line and Weight","icon":"🎯","rating":"<Good|Needs Work|Improve>","feedback":"<feedback>","tip":"<tip>"}],"keyPriority":"<priority>","positives":"<positives>","sessionRecommendation":"<next session focus>"}';
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','anthropic-version':'2023-06-01'},
+      body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+    });
+    var data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+    var rawText = data.content.map(function(b) { return b.text || ''; }).join('');
+    var result;
+    try {
+      var clean = rawText.replace(/```json|```/gi,'').trim();
+      var s = clean.indexOf('{'), e = clean.lastIndexOf('}');
+      if (s !== -1 && e !== -1) clean = clean.substring(s,e+1);
+      result = JSON.parse(clean);
+    } catch(e) {
+      document.getElementById('aLoad').style.display = 'none';
+      document.getElementById('aResults').innerHTML = '<div class="card" style="font-size:14px;line-height:1.8">'+rawText+'</div><button class="btn2" onclick="resetA()">Try Again</button>';
+      return;
+    }
+    showResults(name, angleLabel, result);
+  } catch(err) {
+    document.getElementById('aForm').style.display = 'block';
+    document.getElementById('aLoad').style.display = 'none';
+    showErr('Analysis failed: ' + err.message);
+  }
+}
+
+function rClass(r) { return r === 'Good' ? 'rg' : r === 'Needs Work' ? 'ro' : 'ri'; }
+
+function showResults(name, angleLabel, result) {
+  document.getElementById('aLoad').style.display = 'none';
+  var cats = '';
+  for (var i = 0; i < result.categories.length; i++) {
+    var cat = result.categories[i];
+    cats += '<div class="fs"><div class="fh"><span class="fe">'+cat.icon+'</span><span class="fname">'+cat.name+'</span><span class="fr '+rClass(cat.rating)+'">'+cat.rating+'</span></div><div class="fb">'+cat.feedback+'<div class="tb"><strong>Coaching Tip</strong>'+cat.tip+'</div></div></div>';
+  }
+  var sessRec = result.sessionRecommendation ? '<div class="card" style="border-left:3px solid var(--gl)"><div class="ct" style="font-size:16px">📋 Next Session Focus</div><p style="font-size:14px;line-height:1.7;color:#444">'+result.sessionRecommendation+'</p></div>' : '';
+  document.getElementById('aResults').innerHTML = '<div class="rh"><div class="rn">'+name+'</div><div class="rb">'+angleLabel+'</div><div style="text-align:center;margin-top:16px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:42px;color:var(--glh);line-height:1">'+result.overallScore+'<span style="font-size:18px">/10</span></div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:2px">Coach Score</div></div></div><div class="card" style="border-left:3px solid var(--gl)"><div class="ct" style="font-size:16px;color:var(--gl)">Strengths</div><p style="font-size:14px;line-height:1.7;color:#444">'+result.positives+'</p></div>'+cats+'<div class="card" style="border-left:3px solid var(--gold)"><div class="ct" style="font-size:16px">Priority</div><p style="font-size:14px;line-height:1.7;color:#444">'+result.keyPriority+'</p></div>'+sessRec+'<div class="card" style="background:var(--gp)"><p style="font-size:13px;color:var(--gr);line-height:1.7">'+result.summary+'</p></div><button class="btn2" onclick="resetA()">New Analysis</button>';
+  window.scrollTo(0,0);
+}
+
+function resetA() {
+  vFiles = {side:null,front:null};
+  document.getElementById('aName').value = '';
+  document.getElementById('aNotes').value = '';
+  document.getElementById('fSide').value = '';
+  document.getElementById('fFront').value = '';
+  document.getElementById('vpSide').style.display = 'none';
+  document.getElementById('vpFront').style.display = 'none';
+  document.getElementById('utSide').textContent = 'Tap to select side-on video';
+  document.getElementById('usSide').textContent = 'MP4, MOV or any format';
+  document.getElementById('utFront').textContent = 'Tap to select front-on video';
+  document.getElementById('usFront').textContent = 'Adds line and shoulder analysis';
+  document.getElementById('aBtn').disabled = true;
+  document.getElementById('aResults').innerHTML = '';
+  document.getElementById('aForm').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ── INIT ──
+window.onload = function() {
+  go('home');
+  renderSpan('men');
+  updateSpeed();
+};
+</script></body>
+</html>
